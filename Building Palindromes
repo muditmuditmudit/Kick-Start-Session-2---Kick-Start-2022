@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool isPossible(vector <long long> arr){
+  //cout<<"ispo"<<endl;
+  //for(int i=0;i<26;i++){
+  //  cout<<arr[i]<<" ";
+  //}
+  //cout<<endl;
+  int odd = 0;
+  for(int i=0;i<26;i++){
+    if(arr[i] & 1) odd++;
+  }
+  //cout<<odd;
+  if(odd > 1){
+    return false;
+  }
+  return true;
+}
+vector <long long> diffArray(vector<vector<long long>> &pre,long long L,long long R){
+  vector <long long> curr(26);
+  if(L>0){
+    for(int i=0;i<26;i++){
+      curr[i] -=pre[L-1][i];
+    }
+  }
+    for(int i=0;i<26;i++){
+      curr[i] +=pre[R][i];
+    }
+  return curr;
+}
+
+int main(){
+  long long t;
+  cin>>t;
+  long long k = t;
+  while(t--){
+    long long N,Q;
+    cin>>N>>Q;
+    string s;
+    cin>>s;
+
+    vector <vector<long long>> prefixSum(N , vector<long long> (26, 0));
+
+    for(int i=0;i<N;i++){
+      if(i>0){
+        for(int j=0;j<26;j++){
+          prefixSum[i][j] = prefixSum[i-1][j];
+        }
+      }
+      prefixSum[i][s[i]-'A']++;
+    }
+    long long ans = 0;
+    vector <long long> v;
+    while(Q--){
+      long long L,R;
+      cin>>L>>R;
+      v = diffArray(prefixSum,L-1,R-1);
+      if(isPossible(v)) ans++;
+    }
+
+  /*for(auto i:v){
+    cout<<i<<" ";
+  }*/
+  
+    cout<<"Case #"<<k-t<<": "<<ans<<"\n";
+  }
+}
